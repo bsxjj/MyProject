@@ -1,0 +1,27 @@
+<c3p0-config>
+  <default-config>
+     <property name="driverClass">com.mysql.jdbc.Driver</property> 
+    <!--  <property name="jdbcUrl">jdbc:mysql:///hotel?useUnicode=true&amp;characterEncoding=utf8</property> -->
+     <property name="jdbcUrl"><![CDATA[jdbc:mysql://localhost:3306/showpicture?useUnicode=true&characterEncoding=utf8]]></property> 
+     <property name="user">root</property> 
+     <property name="password"></property> 
+     <!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->    
+     <property name="acquireIncrement">3</property>
+     <!--定义在从数据库获取新连接失败后重复尝试的次数。Default: 30 -->    
+     <property name="acquireRetryAttempts">30</property>
+     <!--两次连接中间隔时间，单位毫秒。Default: 1000 -->    
+     <property name="acquireRetryDelay">1000</property>
+      <!--连接关闭时默认将所有未提交的操作回滚。Default: false -->
+     <property name="autoCommitOnClose">false</property>
+     <!--当连接池用完时客户端调用getConnection()后等待获取新连接的时间，超时后将抛出    
+    SQLException,如设为0则无限期等待。单位毫秒。Default: 0 -->    
+    <property name="checkoutTimeout">3000</property>    
+     <property name="initialPoolSize">5</property> 
+     <property name="maxPoolSize">100</property>
+     <property name="maxIdleTimeExcessConnections">20</property>
+      <property name="maxConnectionAge">20</property>
+      <!-- 关闭缓存 -->
+	 <property name="maxStatements">0</property>
+  </default-config>
+
+</c3p0-config>
