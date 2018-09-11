@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.xjj.dao.CategorySecondDao">
+      <insert id="insert" parameterType="com.xjj.entity.CategorySecond">
+           insert into categorysecond(csname,cid) values(#{csname},#{cid})
+      </insert>
+      <delete id="delete">
+           delete from categorysecond where csid=#{csid}
+      </delete>
+      <update id="update" parameterType="com.xjj.entity.CategorySecond">
+           update categorysecond set csname=#{csname} where csid=#{csid}
+      </update>
+      <select id="findById" resultMap="mytype">
+           select * from categorysecond cs,category c where cs.cid=c.cid and csid=#{csid}
+      </select>
+      <resultMap type="com.xjj.entity.CategorySecond" id="mytype">
+           <id column="csid" property="csid"/>
+           <result column="csname" property="csname"/>
+           <association property="category" javaType="com.xjj.entity.Category">
+                <id column="cid" property="cid"/>
+                <result column="cname" property="cname"/>
+           </association>
+      </resultMap>
+      <select id="findAll" resultType="com.xjj.entity.CategorySecond">
+           select * from categorysecond
+      </select>
+      <select id="findCount" resultType="int">
+           select count(*) from categorysecond
+      </select>
+      <select id="findByPage" resultType="com.xjj.entity.CategorySecond">
+           select * from categorysecond limit #{begin},#{pageSize}
+      </select>
+ </mapper>

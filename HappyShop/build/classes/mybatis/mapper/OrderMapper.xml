@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.xjj.dao.OrderDao">
+      <insert id="saveOrder" parameterType="com.xjj.entity.Order">
+           <selectKey keyProperty="oid" order="AFTER" resultType="int">
+               select last_insert_id()
+           </selectKey>
+           insert into orders(total,ordertime,state,uid)
+           values(#{total},#{ordertime},#{state},#{uid});
+      </insert>
+      <select id="findCountByUid" resultType="int" parameterType="int">
+           select count(*) from orders where uid=#{uid}
+      </select>
+      <select id="findPageByUid" resultMap="myorder">
+           select o.* from orders o,user u where u.uid=o.uid 
+           and u.uid=#{uid} limit #{begin},#{pageSize}
+      </select>
+      <resultMap type="com.xjj.entity.Order" id="myorder">
+           <id column="oid" property="oid"/>
+           <result column="total" property="total"/>
+           <result column="ordertime" property="ordertime"/>
+           <result column="state" property="state"/>
+           <result column="name" property="name"/>
+           <result column="phone" property="phone"/>
+           <result column="addr" property="addr"/>
+           <result column="uid" property="uid"/>
+           
+           <association property="user" javaType="com.xjj.entity.User">
+               <id column="uid" property="uid"/>
+           </association>
+           <collection property="orderItems" 
+               select="com.xjj.dao.OrderItemDao.findByOid" column="oid">
+           </collection>
+      </resultMap>
+      
+      <select id="findByOid" resultMap="myorder1">
+           select * from orders o,orderitem item,user u
+           where o.oid=item.oid and o.uid=u.uid and o.oid=#{oid}
+      </select>
+      <resultMap type="com.xjj.entity.Order" id="myorder1">
+           <id column="oid" property="oid"/>
+           <result column="total" property="total"/>
+           <result column="ordertime" property="ordertime"/>
+           <result column="state" property="state"/>
+           <result column="name" property="name"/>
+           <result column="phone" property="phone"/>
+           <result column="addr" property="addr"/>
+           <result column="uid" property="uid"/>
+           <association property="user" javaType="com.xjj.entity.User">
+               <id column="uid" property="uid"/>
+               <result column="username" property="username"/>
+               <result column="phone" property="phone"/>
+               <result column="addr" property="addr"/>
+           </association>
+           <collection property="orderItems" 
+               select="com.xjj.dao.OrderItemDao.findByOid" column="oid">
+           </collection>
+      </resultMap>
+      <update id="update" parameterType="com.xjj.entity.Order">
+           update orders set name=#{name},phone=#{phone},addr=#{addr} 
+           where oid=#{oid}
+      </update>
+      <select id="findCount" resultType="int">
+           select count(*) from orders
+      </select>
+      <select id="findByPage" resultType="com.xjj.entity.Order">
+           select * from orders limit #{begin},#{pageSize}
+      </select>
+      <select id="findOrderItemByOid" parameterType="int" resultMap="myorder1">
+           select item.* from orders o,orderitem item 
+           where o.oid=item.oid and o.oid=#{oid}
+      </select>
+ </mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.xjj.dao.UserDao">
+ 
+     <insert id="insertUser" parameterType="com.xjj.entity.User">
+       insert into user(username,password,name,email,phone,addr)
+       values(#{username},#{password},#{name},#{email},#{phone},#{addr});
+     </insert>
+     
+     <select id="findByUserName" parameterType="java.lang.String" resultType="com.xjj.entity.User">
+       select * from user where username = #{username}
+     </select>
+     
+     <select id="findByUsernameAndPwd" resultType="com.xjj.entity.User">
+       select * from user where username = #{username} and password = #{password}
+     </select>  
+ </mapper>
+ 

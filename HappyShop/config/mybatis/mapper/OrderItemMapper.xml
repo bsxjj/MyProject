@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.xjj.dao.OrderItemDao">
+     <insert id="saveOrderItem" parameterType="com.xjj.entity.OrderItem">
+         insert into orderitem(count,subtotal,pid,oid) 
+         values(#{count},#{subtotal},#{pid},#{oid});
+     </insert>
+     <select id="findByOid" resultMap="myorderitem">
+         select * from orderitem item,product p
+         where p.pid=item.pid and oid=#{oid};
+     </select>
+     <resultMap type="com.xjj.entity.OrderItem" id="myorderitem">
+         <id column="itemid" property="itemid"/>
+         <result column="count" property="count"/>
+         <result column="subtotal" property="subtotal"/>
+         <result column="pid" property="pid"/>
+         <result column="oid" property="oid"/>
+         <association property="product" javaType="com.xjj.entity.Product">
+             <id column="pid" property="pid"/>
+             <result column="pname" property="pname"/>
+             <result column="market_price" property="market_price"/>
+             <result column="shop_price" property="shop_price"/>
+             <result column="image" property="image"/>
+             <result column="pdesc" property="pdesc"/>
+         </association>
+     </resultMap>
+ </mapper>

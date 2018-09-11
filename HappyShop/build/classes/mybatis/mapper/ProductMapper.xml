@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.xjj.dao.ProductDao">
+ 
+      <select id="findHot" resultType="com.xjj.entity.Product">
+          select * from product where is_hot=1 order by pdate desc limit 1,10
+      </select>
+      <select id="findNew" resultType="com.xjj.entity.Product">
+          select * from product order by pdate desc limit 1,10
+      </select>
+      <select id="findByPid" resultType="com.xjj.entity.Product">
+          select * from product where pid = #{pid}
+      </select>
+      <select id="findCountCid" parameterType="int" resultType="int">
+          select count(p.pid) from category c,categorysecond cs,product p
+          where c.cid=cs.cid and cs.csid=p.csid and c.cid=#{cid}
+      </select>
+      <select id="findByPageCid" resultMap="mytype">
+          select p.* from category c,categorysecond cs,product p where c.cid=cs.cid
+          and cs.csid=p.csid and c.cid=#{cid} limit #{begin},#{pageSize}
+      </select>
+      
+      <resultMap type="com.xjj.entity.Product" id="mytype">
+          <id column="pid" property="pid"/>
+          <result column="pname" property="pname"/>
+          <result column="market_price" property="market_price"/>
+          <result column="shop_price" property="shop_price"/>
+          <result column="image" property="image"/>
+          <result column="pdesc" property="pdesc"/>
+          <result column="is_hot" property="is_hot"/>
+          <result column="pdate" property="pdate"/>
+           <!-- 查询的结果中涉及另外一张表的信息，通过assoication -->
+          <association property="categorySecond" javaType="com.xjj.entity.CategorySecond">
+              <id column="csid" property="csid"/>
+              <result column="csname" property="csname"/>
+          </association>
+      </resultMap>
+      
+      <select id="findCountCsid" parameterType="int" resultType="int">
+          select count(p.pid) from categorysecond cs,product p
+          where cs.csid=p.csid and cs.csid=#{csid}
+      </select>
+      <select id="findByPageCsid" resultMap="mytype">
+          select p.* from categorysecond cs,product p 
+          where cs.csid=p.csid and cs.csid=#{csid} limit #{begin},#{pageSize}
+      </select>
+      <insert id="insertProduct">
+          insert into product(pname,market_price,shop_price,image,pdesc,is_hot,pdate,csid)
+          values(#{pname},#{market_price},#{shop_price},#{image},#{pdesc},#{is_hot},#{pdate},#{csid})
+      </insert>
+      <delete id="deleteProduct" parameterType="int">
+          delete from product where pid=#{pid}
+      </delete>
+      <update id="updateProduct" parameterType="com.xjj.entity.Product">
+          update product set pname=#{pname},market_price=#{market_price},shop_price=#{shop_price},
+          image=#{image},is_hot=#{is_hot},pdate=#{pdate},csid=#{csid},pdesc=#{pdesc} where pid=#{pid}
+      </update>
+      <select id="findCount" resultType="int">
+          select count(*) from product
+      </select>
+      <select id="findByPage" resultType="com.xjj.entity.Product">
+          select * from product limit #{begin},#{pageSize}
+      </select>
+ </mapper>
